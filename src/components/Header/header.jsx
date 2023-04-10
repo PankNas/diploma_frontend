@@ -29,7 +29,7 @@ export const Header = () => {
           <div className={styles.buttons}>
             {isAuth ? (
               <>
-                <Link to="/courses/create">
+                <Link to="/add-course">
                   <Button variant="contained">Написать статью</Button>
                 </Link>
                 <Button
