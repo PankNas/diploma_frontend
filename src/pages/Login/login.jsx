@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -10,9 +10,10 @@ import { useForm } from "react-hook-form";
 
 import styles from "./Login.module.scss";
 
-import { fetchAuth } from "../../redux/slices/auth";
+import { fetchAuth, selectIsAuth } from "../../redux/slices/auth";
 
 export const Login = () => {
+  const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
 
   const {
@@ -28,9 +29,21 @@ export const Login = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (values) => {
-    dispatch(fetchAuth(values));
+  const onSubmit = async (values) => {
+    const data = await dispatch(fetchAuth(values));
+
+    if (!data.payload) {
+      return alert("Не удалось авторизоваться!");
+    }
+
+    if ("token" in data.payload) {
+      localStorage.setItem("token", data.payload.token);
+    }
   };
+
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Paper classes={{ root: styles.root }}>
