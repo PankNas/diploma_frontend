@@ -8,10 +8,11 @@ import "easymde/dist/easymde.min.css";
 import styles from "./AddPost.module.scss";
 import { useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/slices/auth";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useParams } from "react-router-dom";
 import axios from "../../axios";
 
 export const AddPost = () => {
+  const {id} = useParams();
   const isAuth = useSelector(selectIsAuth);
   const navigate = useNavigate();
 
@@ -20,8 +21,9 @@ export const AddPost = () => {
   const [title, setTitle] = React.useState("");
   const [tags, setTags] = React.useState("");
   const [imageUrl, setImageUrl] = React.useState("");
-
   const inputFileRef = React.useRef(null);
+
+  const isEditing = Boolean(id);
 
   const handleChangeFile = async (event) => {
     try {
@@ -32,7 +34,6 @@ export const AddPost = () => {
 
       const { data } = await axios.post("/upload", formData);
 
-      console.log(data);
       setImageUrl(data.url.slice(4));
     } catch (err) {
       console.warn(err);
@@ -51,20 +52,36 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags: tags.split(','),
+        tags,
         description,
       };
 
-      const { data } = await axios.post("/courses", fields);
+      const { data } = await (isEditing ? axios.patch(`/courses/${id}`, fields) : axios.post("/courses", fields));
 
-      const id = data._id;
-      navigate(`/courses/${id}`);
+      navigate(`/courses/${isEditing ? id : data._id}`);
     } catch (err) {
       console.warn(err);
 
       alert('Ошибка при создании курса');
     }
   };
+
+  React.useEffect(() => {
+    if (!id) return;
+
+    axios
+      .get(`/courses/${id}`)
+      .then(({data}) => {
+        setTitle(data.title);
+        setDescription(data.description);
+        setImageUrl(data.imageUrl);
+        setTags(data.tags.join(','));
+      })
+      .catch(err => {
+        console.warn(err);
+        alert('Ошибка при получении курса!')
+      });
+  }, []);
 
   const onChange = React.useCallback((value) => {
     setDescription(value);
@@ -146,7 +163,7 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
-          Опубликовать
+          {isEditing ? 'Сохранить' : 'Опубликовать'}
         </Button>
         <a href="/">
           <Button size="large">Отмена</Button>

@@ -1,14 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axios.js";
+import {courseReducer} from "../../utils/extraReducer";
 
 export const fetchCourses = createAsyncThunk(
   "courses/fetchCourses",
-  async () => await axios.get("/courses")
+  async () => (await axios.get("/courses")).data
 );
 
 export const fetchTags = createAsyncThunk(
   "courses/fetchTags",
-  async () => await axios.get("/tags")
+  async () => (await axios.get("/tags")).data
+);
+
+export const fetchRemoveCourse = createAsyncThunk(
+  "courses/fetchRemovePosts",
+  async (id) => await axios.delete(`/courses/${id}`)
 );
 
 const initialState = {
@@ -27,6 +33,7 @@ const coursesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    // курсы
     [fetchCourses.pending]: (state) => {
       state.courses.items = [];
       state.courses.status = "loading";
@@ -40,6 +47,7 @@ const coursesSlice = createSlice({
       state.courses.status = "error";
     },
 
+    // теги
     [fetchTags.pending]: (state) => {
       state.tags.items = [];
       state.tags.status = "loading";
@@ -51,6 +59,11 @@ const coursesSlice = createSlice({
     [fetchTags.rejected]: (state) => {
       state.tags.items = [];
       state.tags.status = "error";
+    },
+
+    // удаление курса
+    [fetchRemoveCourse.pending]: (state, action) => {
+      state.courses.items = state.courses.items.filter(obj => obj._id !== action.meta.arg);
     },
   },
 });

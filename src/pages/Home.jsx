@@ -35,7 +35,7 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {(isCoursesLoading ? [...Array(5)] : courses.items.data).map(
+          {(isCoursesLoading ? [...Array(5)] : courses.items).map(
             (obj, index) =>
               isCoursesLoading ? (
                 <Post key={index} isLoading={true} />
@@ -49,13 +49,13 @@ export const Home = () => {
                   viewsCount={obj.viewsCount}
                   commentsCount={3}
                   tags={obj.tags}
-                  isEditable={userData?.data._id === obj.user._id}
+                  isEditable={userData?._id === obj.user._id}
                 />
               )
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={tags.items.data} isLoading={isTagsLoading} />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {
