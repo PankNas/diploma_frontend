@@ -13,6 +13,7 @@ import axios from "../../axios";
 
 export const AddPost = () => {
   const isAuth = useSelector(selectIsAuth);
+  const navigate = useNavigate();
 
   const [isLoading, setLoading] = React.useState(false);
   const [description, setDescription] = React.useState("");
@@ -30,7 +31,9 @@ export const AddPost = () => {
       formData.append("image", file);
 
       const { data } = await axios.post("/upload", formData);
-      setImageUrl(data.url);
+
+      console.log(data);
+      setImageUrl(data.url.slice(4));
     } catch (err) {
       console.warn(err);
       alert("Ошибка при загрузке файла!");
@@ -48,13 +51,18 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags,
+        tags: tags.split(','),
         description,
       };
 
       const { data } = await axios.post("/courses", fields);
+
+      const id = data._id;
+      navigate(`/courses/${id}`);
     } catch (err) {
-      df;
+      console.warn(err);
+
+      alert('Ошибка при создании курса');
     }
   };
 

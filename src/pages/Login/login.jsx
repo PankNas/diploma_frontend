@@ -32,6 +32,8 @@ export const Login = () => {
   const onSubmit = async (values) => {
     const data = await dispatch(fetchAuth(values));
 
+    console.log("data client: ", data);
+
     if (!data.payload) {
       return alert("Не удалось авторизоваться!");
     }
