@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axios.js";
+import {useSelector} from "react-redux";
 
 export const fetchAuth = createAsyncThunk("auth/fetchAuth",
   async (params) => await axios.post("/auth/login", params)
@@ -16,6 +17,10 @@ export const fetchRegister = createAsyncThunk(
 );
 
 const initialState = {
+  email: null,
+  token: null,
+  id: null,
+
   data: null,
   status: "loading",
 };
@@ -24,8 +29,17 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setUser(state, action) {
+      state.email = action.payload.email;
+      state.token = action.payload.token;
+      state.id = action.payload.id;
+    },
+
     logout: (state) => {
-      state.data = null;
+      state.email = '';
+      state.token = '';
+      state.id = '';
+      // state.data = null;
     },
   },
   extraReducers: {
@@ -70,6 +84,17 @@ const authSlice = createSlice({
   },
 });
 
-export const selectIsAuth = (state) => Boolean(state.auth.data);
+export const selectIsAuth = (state) => Boolean(state.auth.data); // delete later
+export const useAuth = () => {
+  const {email, token, id} = useSelector(state => state.auth);
+
+  return {
+    isAuth: !!email,
+    email,
+    token,
+    id,
+  }
+}
+
 export const authReducer = authSlice.reducer;
-export const { logout } = authSlice.actions;
+export const { setUser, logout } = authSlice.actions;
