@@ -3,6 +3,7 @@
   padding: 50px;
   border: 1px solid #dedede;
   margin: 50px auto;
+  background-color: #ffffff;
 }
 
 .field {
@@ -13,10 +14,5 @@
   text-align: center !important;
   font-weight: bold !important;
   margin-bottom: 30px !important;
-}
-
-.avatar {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
+  size: 20px;
 }
