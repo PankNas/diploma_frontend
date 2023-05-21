@@ -14,7 +14,7 @@ import styles from "./Post.module.scss";
 
 import { UserInfo } from "../UserInfo";
 import { PostSkeleton } from "./Skeleton";
-import {fetchRemoveCourse} from "../../redux/slices/courses";
+import {fetchRemoveCourse} from "../../redux/slices/posts";
 
 export const Post = ({
   id,

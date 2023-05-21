@@ -11,7 +11,9 @@ export const SignUp = () => {
   const onSubmit = async (values) => {
     const user = await dispatch(fetchSignUp(values));
 
-    if (!user) return alert("Не удалось зарегистрироваться!");
+    if (!user.payload) return alert("Не удалось зарегистрироваться!");
+
+    localStorage.setItem('token', user.payload.token)
   };
 
   if (isAuth) return <Navigate to="/"/>;

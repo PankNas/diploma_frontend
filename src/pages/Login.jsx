@@ -11,9 +11,10 @@ export const Login = () => {
 
   const onSubmit = async (values) => {
     const user = await dispatch(fetchAuth(values));
-    console.log(user);
 
-    if (!user) return alert("Не удалось авторизоваться!");
+    if (!user.payload) return alert("Не удалось авторизоваться!");
+
+    localStorage.setItem('token', user.payload.token)
   };
 
   if (isAuth) return <Navigate to="/"/>;

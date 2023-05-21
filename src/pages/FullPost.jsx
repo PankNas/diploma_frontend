@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { Post } from "../components/Post";
-import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios.js";
 import ReactMarkdown from "react-markdown";
 

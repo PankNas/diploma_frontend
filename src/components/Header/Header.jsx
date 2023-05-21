@@ -12,11 +12,11 @@ export const Header = () => {
   const isAuth = useSelector(selectIsAuth);
 
   const onClickLogout = () => {
-    if (window.confirm("Вы действительно хотите выйти?")) {
-      dispatch(logout());
+    if (!window.confirm("Вы действительно хотите выйти?")) return;
 
-      localStorage.removeItem("token");
-    }
+    dispatch(logout());
+
+    // localStorage.removeItem("token");
   };
 
   return (
@@ -24,7 +24,7 @@ export const Header = () => {
       <Container maxWidth="lg">
         <div className={styles.inner}>
           <Link className={styles.logo} to="/">
-            <div>ARCHAKOV BLOG</div>
+            <div>BLOG</div>
           </Link>
           <div className={styles.buttons}>
             {isAuth ? (
